@@ -17,7 +17,7 @@ DocuMind AI is a professional-grade, high-performance document intelligence plat
 ## 🚀 Live Demo
 
 🌐 **Live Streamlit App**: [s9dxsrr7do2kemrkdhpwos.streamlit.app](https://s9dxsrr7do2kemrkdhpwos.streamlit.app/)  
-🐳 **Docker Container Image**: [Docker Hub Link](https://hub.docker.com/r/pratyakshagupta16/documind-ai) *(Placeholder)*
+🐳 **Docker Container Image**: [Docker Hub Link](https://hub.docker.com/r/pratyakshagupta16/documind-ai)
 
 ---
 
@@ -81,11 +81,13 @@ graph TD
 
 ## 📷 Screenshots / Demo
 
-*(Add your UI previews, GIFs of split-screen navigation, and flashcard toggles here)*
+<img width="1919" height="891" alt="image" src="https://github.com/user-attachments/assets/e21179c0-70c5-44bf-9c8b-adc950be2f23" />
+<img width="1901" height="910" alt="image" src="https://github.com/user-attachments/assets/a6970c38-f7af-4138-b0e0-4c61463c823e" />
+<img width="1871" height="894" alt="image" src="https://github.com/user-attachments/assets/5bd69041-14f6-4119-9525-bb20943ae908" />
+<img width="1919" height="879" alt="image" src="https://github.com/user-attachments/assets/5c7caa23-63ad-4a5d-be17-6751aa144192" />
 
-| Sidebar Control & File List | Split Screen Chat & Document Viewer |
-| :---: | :---: |
-| ![[Sidebar Preview placeholder]](https://placehold.co/400x300/0f172a/f8fafc?text=Sidebar+UI+Preview) | ![[Chat Preview placeholder]](https://placehold.co/600x300/0f172a/f8fafc?text=Main+Workspace+Split-Screen) |
+
+
 
 ---
 
@@ -139,7 +141,3 @@ streamlit run frontend/app.py
 - **📝 Development & Research Documentation**: Query system architectures, textbooks, or package guidelines in bulk.
 
 ---
-
-<p align="center">
-  <b>Built with ❤️ by Pratyaksha Gupta</b>
-</p>
