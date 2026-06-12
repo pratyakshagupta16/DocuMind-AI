@@ -5,12 +5,45 @@ import requests
 from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
 
+try:
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    HAS_GEMINI = True
+except ImportError:
+    HAS_GEMINI = False
+
+try:
+    from langchain_openai import ChatOpenAI
+    HAS_OPENAI = True
+except ImportError:
+    HAS_OPENAI = False
+
 load_dotenv()
 
 def get_llm():
     """
-    Helper function to load the local Ollama model.
+    Helper function to load the LLM. 
+    Selects Gemini or OpenAI if keys are present (useful for cloud deployments), 
+    otherwise falls back to local Ollama.
     """
+    # 1. Check for Gemini (recommended for free-tier Streamlit Cloud)
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    if gemini_key and HAS_GEMINI:
+        return ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            google_api_key=gemini_key,
+            temperature=0.0
+        )
+        
+    # 2. Check for OpenAI
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key and HAS_OPENAI:
+        return ChatOpenAI(
+            model="gpt-4o-mini",
+            api_key=openai_key,
+            temperature=0.0
+        )
+        
+    # 3. Fallback to Local Ollama
     ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
     ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     
@@ -28,8 +61,8 @@ def invoke_llm(llm, prompt_or_messages):
         return llm.invoke(prompt_or_messages)
     except Exception as e:
         raise RuntimeError(
-            f"⚠️ **Ollama Connection/Inference Failure**\n\n"
-            f"Failed to communicate with your local Ollama instance.\n\n"
+            f"⚠️ **AI Model Connection/Inference Failure**\n\n"
+            f"Failed to communicate with your AI model provider.\n\n"
             f"Error details: `{str(e)}`"
         )
 
