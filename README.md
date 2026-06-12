@@ -1,98 +1,159 @@
-# DocuMind AI
+# 📄 DocuMind AI
 
-**DocuMind AI** is a professional, high-performance document intelligence assistant. It allows you to chat with multiple PDF files side-by-side with an integrated PDF viewer, view transparent page citations, and generate custom study flashcards on demand. The backend runs completely locally using Ollama and FAISS embeddings.
+### *Chat with PDFs. Learn Faster. Your Personal Document Intelligence Assistant.*
 
----
-
-## Features
-- **💬 Side-by-Side PDF Chat**: Question your document database with responses grounded strictly in PDF content.
-- **📖 Integrated Document Viewer**: View your uploaded documents side-by-side with the chat. Click citation references to jump directly to specific pages.
-- **🔍 Transparent Citations**: Exact sources and page numbers are highlighted under answers, with raw snippets available in an expandable citation detail box.
-- **📇 On-Demand Flashcards**: Generates study flashcard questions and answers with collapsible reveal views.
-- **📥 Notes Export**: Download study guides, citation references, and flashcards in a formatted Markdown file.
-- **⚡ Performance Caching**: PDF processing and vector store building are cached via Streamlit resources, running exactly once per distinct file-hash upload.
+DocuMind AI is a professional-grade, high-performance document intelligence platform designed to transform passive reading into active learning. By combining local LLM reasoning with advanced retrieval-augmented generation (RAG), DocuMind AI allows users to chat with multiple PDF documents side-by-side with an integrated page-viewer, see transparent inline page citations, and generate study flashcards on demand.
 
 ---
 
-## Tech Stack
-- **Frontend**: Streamlit
-- **Orchestration**: LangChain (`langchain-core`, `langchain-community`)
-- **Model Interface**: `langchain-ollama`
-- **Embeddings**: `langchain-huggingface` (using `sentence-transformers/all-MiniLM-L6-v2`)
-- **Vector Database**: FAISS (using `faiss-cpu`)
-- **PDF Parser**: `pypdf`
+## 👥 Developer & Owner
+
+- **Pratyaksha Gupta**
+- **GitHub**: [github.com/pratyakshagupta16](https://github.com/pratyakshagupta16)
+- **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/pratyaksha-gupta/) *(Placeholder)*
 
 ---
 
-## Installation
+## 🚀 Live Demo
+
+🌐 **Live Streamlit App**: [App Live Link](https://share.streamlit.io/pratyakshagupta16/DocuMind-AI/main/frontend/app.py) *(Placeholder)*  
+🐳 **Docker Container Image**: [Docker Hub Link](https://hub.docker.com/r/pratyakshagupta16/documind-ai) *(Placeholder)*
+
+---
+
+## 📖 Project Overview & Value Proposition
+
+Traditional document analysis often involves manual skimming, searching through hundreds of pages, and copy-pasting notes—a passive process with high cognitive load. **DocuMind AI** bridges this gap by acting as a responsive study workspace. 
+
+By utilizing local embedding models and FAISS vector databases, the application indexes your PDFs in seconds. Users can ask questions in natural language and receive grounded, structured responses instantly, coupled with an interactive split-screen layout to cross-reference answers with the exact source pages.
+
+---
+
+## 🛠️ System Architecture
+
+```mermaid
+graph TD
+    classDef file fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef process fill:#0f172a,stroke:#818cf8,stroke-width:1px,color:#94a3b8;
+    classDef output fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#34d399;
+
+    A["📥 Upload Source PDFs"] --> B["📄 pypdf Loader"]
+    B --> C["✂️ Recursive Document Splitter"]
+    C --> D["🧠 HuggingFace Embeddings"]
+    D --> E["🗄️ FAISS Vector Index (Disk Cache)"]:::file
+    
+    F["💬 User Input Query"] --> G["🔍 Similarity search (k=4)"]
+    E --> G
+    G --> H["🔗 Source Document Chunks"]
+    
+    H --> I["🤖 Llama3 Local Model (Ollama)"]
+    F --> I
+    I --> J["✏️ Grounded Markdown Answer"]:::output
+    J --> K["📇 On-Demand Study Flashcards"]:::output
+
+    class A,B,C,D,F,G,H,I process;
+```
+
+---
+
+## ✨ Key Features
+
+- **💬 Multi-PDF Document Chat**: Query single or multiple documents concurrently. Answers are strictly grounded in document text.
+- **📖 Integrated PDF Viewer**: A split-screen document viewer displays selected files. Jump to the exact source page dynamically by clicking inline citation references.
+- **🔍 Transparent Inline Citations**: Source references are presented directly under the response, with expandable context boxes highlighting the extracted source snippets.
+- **📇 On-Demand Study Flashcards**: Turn any answer into structured questions and answers with collapsible cards to test your retention.
+- **📥 Notes Export**: Download complete study notes, summaries, page citations, and study flashcards as a structured Markdown file.
+- **⚡ Performance Cache**: PDF loading and index vectorization are cached via Streamlit resources, running exactly once per distinct file upload set.
+- **🛡️ Local Ollama Inference**: Private, local model queries using your own workstation CPU/GPU compute, securing your document privacy.
+
+---
+
+## 💻 Tech Stack
+
+- **Frontend & UI Layout**: Streamlit (Vanilla CSS customization, glassmorphic dark-theme, responsive dual columns)
+- **RAG & Chunking Orchestration**: LangChain Core (`langchain-core`), LangChain Community (`langchain-community`)
+- **LLM Engine**: `langchain-ollama` (defaulting to `llama3`)
+- **Embeddings**: `langchain-huggingface` (running `sentence-transformers/all-MiniLM-L6-v2`)
+- **Vector Database**: FAISS (`faiss-cpu`)
+- **PDF Extraction**: `pypdf`
+
+---
+
+## 📷 Screenshots / Demo
+
+*(Add your UI previews, GIFs of split-screen navigation, and flashcard toggles here)*
+
+| Sidebar Control & File List | Split Screen Chat & Document Viewer |
+| :---: | :---: |
+| ![[Sidebar Preview placeholder]](https://placehold.co/400x300/0f172a/f8fafc?text=Sidebar+UI+Preview) | ![[Chat Preview placeholder]](https://placehold.co/600x300/0f172a/f8fafc?text=Main+Workspace+Split-Screen) |
+
+---
+
+## ⚙️ Installation & Setup
 
 ### Prerequisites
 - Python 3.10+
-- [Ollama](https://ollama.com/) installed and running locally
+- [Ollama](https://ollama.com/) installed and running on your system
 
-### Local Setup
-1. **Clone the Repository**:
-   ```bash
-   git clone <your-repo-url>
-   cd DocuMind
-   ```
+### 1. Local Application Setup
+```bash
+# Clone the repository
+git clone https://github.com/pratyakshagupta16/DocuMind-AI.git
+cd DocuMind-AI
 
-2. **Set up Virtual Environment**:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On MacOS/Linux:
-   source venv/bin/activate
-   ```
+# Create and activate virtual environment
+python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# MacOS/Linux:
+source venv/bin/activate
 
-3. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Install dependencies
+pip install -r requirements.txt
+```
 
-4. **Start local Ollama & Pull Model**:
-   Make sure the Ollama application is running, and pull your model of choice:
-   ```bash
-   ollama pull llama3
-   ```
+### 2. Configure Local Ollama Engine
+Ensure Ollama is running, then pull the target model (default `llama3`):
+```bash
+ollama pull llama3
+```
 
-5. **Set Environment Variables**:
-   Create a `.env` file in the root directory:
-   ```env
-   OLLAMA_MODEL=llama3
-   OLLAMA_BASE_URL=http://localhost:11434
-   ```
+### 3. Environment Variables
+Create a `.env` file in the root workspace directory:
+```env
+OLLAMA_MODEL=llama3
+OLLAMA_BASE_URL=http://localhost:11434
+```
 
----
-
-## Running the Application
-Run the Streamlit application:
+### 4. Running the Project
 ```bash
 streamlit run frontend/app.py
 ```
 
 ---
 
-## Screenshots Placeholder
-*(Add your app interface screenshots here)*
+## 💡 Use Cases
+
+- **🎓 Academic Study**: Quickly summarize scientific papers, draft flashcards for exam preparation, and trace citations directly.
+- **💼 Legal & Professional Audits**: Search contracts, document indexes, or reference manuals for specific terms and navigate directly to target sections.
+- **📝 Development & Research Documentation**: Query system architectures, textbooks, or package guidelines in bulk.
 
 ---
 
-## Deployment Strategy & Limitations
+## 🔮 Future Improvements
 
-### The Ollama Deployment Constraint
-Ollama runs LLMs locally on system hardware. Free-tier cloud instances (like Render Free, Railway, or Streamlit Community Cloud) do not include GPUs and limit RAM to 512MB–2GB. Running a model like `llama3` requires at least 4.6GB of RAM and significant CPU/GPU compute, meaning **Ollama cannot run inside a standard free cloud container**.
+- Add a selection widget to toggle between local Ollama models and cloud API models (Gemini/OpenAI).
+- Support OCR for scanned PDF files.
+- Enable full dark/light theme options with automatic system detection.
 
-### Recommended Hosting Options:
+---
 
-#### 1. Self-Hosted VPS with GPU (Recommended)
-Deploy the Streamlit frontend container on a VM (AWS EC2, DigitalOcean, RunPod, or Vast.ai) with GPU access, and run Ollama alongside it.
+## 📄 License
 
-#### 2. Hybrid Deployment (Streamlit Cloud + Cloud Ollama)
-Host the Streamlit app on Streamlit Community Cloud (free) or Render, and configure the `OLLAMA_BASE_URL` environment variable to point to a secure remote Ollama instance running on a private VPS or GPU cloud (e.g. RunPod endpoint).
+Distributed under the MIT License. See `LICENSE` for more information.
 
-#### 3. Shift to Cloud APIs (Alternative)
-If you want serverless cloud hosting without a private VPS, modify the LLM wrapper in `backend/utils/generator.py` to use a cloud API provider, such as:
-- **Gemini API**: Replace `ChatOllama` with `ChatGoogleGenerativeAI` from `langchain_google_genai`.
-- **OpenAI API**: Replace `ChatOllama` with `ChatOpenAI` from `langchain_openai`.
+---
+
+<p align="center">
+  <b>Built with ❤️ by Pratyaksha Gupta</b>
+</p>
