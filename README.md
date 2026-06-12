@@ -10,13 +10,13 @@ DocuMind AI is a professional-grade, high-performance document intelligence plat
 
 - **Pratyaksha Gupta**
 - **GitHub**: [github.com/pratyakshagupta16](https://github.com/pratyakshagupta16)
-- **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/pratyaksha-gupta/) *(Placeholder)*
+- **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/pratyakshagupta16/)
 
 ---
 
 ## 🚀 Live Demo
 
-🌐 **Live Streamlit App**: [App Live Link](https://share.streamlit.io/pratyakshagupta16/DocuMind-AI/main/frontend/app.py) *(Placeholder)*  
+🌐 **Live Streamlit App**: [s9dxsrr7do2kemrkdhpwos.streamlit.app](https://s9dxsrr7do2kemrkdhpwos.streamlit.app/)  
 🐳 **Docker Container Image**: [Docker Hub Link](https://hub.docker.com/r/pratyakshagupta16/documind-ai) *(Placeholder)*
 
 ---
@@ -137,20 +137,6 @@ streamlit run frontend/app.py
 - **🎓 Academic Study**: Quickly summarize scientific papers, draft flashcards for exam preparation, and trace citations directly.
 - **💼 Legal & Professional Audits**: Search contracts, document indexes, or reference manuals for specific terms and navigate directly to target sections.
 - **📝 Development & Research Documentation**: Query system architectures, textbooks, or package guidelines in bulk.
-
----
-
-## 🔮 Future Improvements
-
-- Add a selection widget to toggle between local Ollama models and cloud API models (Gemini/OpenAI).
-- Support OCR for scanned PDF files.
-- Enable full dark/light theme options with automatic system detection.
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
