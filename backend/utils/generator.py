@@ -19,31 +19,25 @@ except ImportError:
 
 load_dotenv()
 
+# Startup configuration logging
+_gemini_key = os.getenv("GEMINI_API_KEY")
+_openai_key = os.getenv("OPENAI_API_KEY")
+_ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
+_ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+
+print("INFO [DocuMind AI]: Initializing AI configurations...")
+if _gemini_key and HAS_GEMINI:
+    print("INFO [DocuMind AI]: Primary AI Provider: Google Gemini (Preferred Model: gemini-2.5-flash)")
+elif _openai_key and HAS_OPENAI:
+    print("INFO [DocuMind AI]: Primary AI Provider: OpenAI (Model: gpt-4o-mini)")
+else:
+    print(f"INFO [DocuMind AI]: Primary AI Provider: Local Ollama (Model: {_ollama_model} at {_ollama_url})")
+
+
 def get_llm():
     """
-    Helper function to load the LLM. 
-    Selects Gemini or OpenAI if keys are present (useful for cloud deployments), 
-    otherwise falls back to local Ollama.
+    Helper function to load the local Ollama model.
     """
-    # 1. Check for Gemini (recommended for free-tier Streamlit Cloud)
-    gemini_key = os.getenv("GEMINI_API_KEY")
-    if gemini_key and HAS_GEMINI:
-        return ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
-            google_api_key=gemini_key,
-            temperature=0.0
-        )
-        
-    # 2. Check for OpenAI
-    openai_key = os.getenv("OPENAI_API_KEY")
-    if openai_key and HAS_OPENAI:
-        return ChatOpenAI(
-            model="gpt-4o-mini",
-            api_key=openai_key,
-            temperature=0.0
-        )
-        
-    # 3. Fallback to Local Ollama
     ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
     ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     
@@ -53,17 +47,77 @@ def get_llm():
         temperature=0.0
     )
 
-def invoke_llm(llm, prompt_or_messages):
+def invoke_llm(llm_or_prompt, prompt_or_messages=None):
     """
-    Invokes the LLM, returning results directly or raising a friendly error if it fails.
+    Invokes the LLM with dynamic model fallback and logging.
     """
+    prompt = prompt_or_messages if prompt_or_messages is not None else llm_or_prompt
+    
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    openai_key = os.getenv("OPENAI_API_KEY")
+    
+    # 1. Try Google Gemini with currently supported production models
+    if gemini_key and HAS_GEMINI:
+        gemini_models = [
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro"
+        ]
+        for model in gemini_models:
+            try:
+                print(f"INFO [DocuMind AI]: Attempting model 'google/{model}' via Gemini API...")
+                llm = ChatGoogleGenerativeAI(
+                    model=model,
+                    google_api_key=gemini_key,
+                    temperature=0.0
+                )
+                res = llm.invoke(prompt)
+                print(f"INFO [DocuMind AI]: Successful response from model 'google/{model}'")
+                return res
+            except Exception as e:
+                print(f"WARN [DocuMind AI]: Gemini model '{model}' failed: {str(e)}")
+                continue
+
+    # 2. Try OpenAI
+    if openai_key and HAS_OPENAI:
+        try:
+            print("INFO [DocuMind AI]: Attempting model 'openai/gpt-4o-mini'...")
+            llm = ChatOpenAI(
+                model="gpt-4o-mini",
+                api_key=openai_key,
+                temperature=0.0
+            )
+            res = llm.invoke(prompt)
+            print("INFO [DocuMind AI]: Successful response from model 'openai/gpt-4o-mini'")
+            return res
+        except Exception as e:
+            print(f"WARN [DocuMind AI]: OpenAI model gpt-4o-mini failed: {str(e)}")
+
+    # 3. Fallback to Local Ollama
     try:
-        return llm.invoke(prompt_or_messages)
+        ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
+        ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        print(f"INFO [DocuMind AI]: Attempting local Ollama model '{ollama_model}' at '{ollama_url}'...")
+        
+        llm = ChatOllama(
+            model=ollama_model,
+            base_url=ollama_url,
+            temperature=0.0
+        )
+        res = llm.invoke(prompt)
+        print(f"INFO [DocuMind AI]: Successful response from Ollama model '{ollama_model}'")
+        return res
     except Exception as e:
         raise RuntimeError(
-            f"⚠️ **AI Model Connection/Inference Failure**\n\n"
-            f"Failed to communicate with your AI model provider.\n\n"
-            f"Error details: `{str(e)}`"
+            "⚠️ **AI Inference Failure**\n\n"
+            "We were unable to generate a response because all configured AI providers failed to respond. "
+            "Please check the following configurations:\n"
+            "1. **Gemini API Key:** If you are using Google Gemini, make sure `GEMINI_API_KEY` is set correctly in your environment variables or Streamlit Secrets.\n"
+            "2. **OpenAI API Key:** If you are using OpenAI, make sure `OPENAI_API_KEY` is set correctly.\n"
+            "3. **Local Ollama:** If you are running locally without cloud API keys, ensure that Ollama is running (`ollama serve`) and the specified model is downloaded.\n\n"
+            f"*Technical Error Details:* `{str(e)}`"
         )
 
 

@@ -13,6 +13,7 @@ sys.path.insert(
 )
 
 import streamlit as st
+from streamlit_pdf_viewer import pdf_viewer
 
 from utils.pdf_loader import load_pdf
 from utils.embedder import split_documents
@@ -626,16 +627,9 @@ if col_preview is not None and pdf_files:
         )
         st.session_state.preview_page_num = page_num
         
-        # Cached encoding function
-        @st.cache_data(show_spinner=False)
-        def get_pdf_base64(file_bytes):
-            return base64.b64encode(file_bytes).decode('utf-8')
-            
-        pdf_b64 = get_pdf_base64(uploaded_file.getvalue())
-        
-        # Construct iframe
-        iframe_src = f"data:application/pdf;base64,{pdf_b64}#page={page_num}"
-        st.markdown(
-            f'<iframe src="{iframe_src}" width="100%" height="800" type="application/pdf" style="border: 1px solid var(--border-color); border-radius: 8px;"></iframe>',
-            unsafe_allow_html=True
+        # Render using streamlit-pdf-viewer securely
+        pdf_viewer(
+            input=uploaded_file.getvalue(),
+            pages_to_render=[int(st.session_state.preview_page_num)],
+            width="100%"
         )

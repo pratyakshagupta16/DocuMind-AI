@@ -8,5 +8,6 @@ faiss-cpu==1.13.2
 python-dotenv==1.2.2
 requests==2.33.1
 sentence-transformers==5.3.0
-langchain-google-genai
-langchain-openai
+langchain-google-genai==4.2.5
+langchain-openai==1.1.12
+streamlit-pdf-viewer==0.0.29
